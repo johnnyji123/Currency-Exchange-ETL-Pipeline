@@ -4,6 +4,7 @@ import polars as pl
 import json
 import mysql.connector
 from sqlalchemy import create_engine
+from apscheduler.schedulers.background import BlockingScheduler
 
 
 db = mysql.connector.connect(
@@ -68,10 +69,14 @@ def update_database(df):
         query =  "UPDATE currency_exchange_rate SET GBP = %s, CNY = %s, USD = %s, KRW = %s, JPY = %s, THB = %s, HKD = %s, CAD = %s, EUR =%s WHERE GBP = 1"
         cursor.execute(query, (*row, ))
      
-        
-     
-update_database(df)
+
+def test():
+    print("hi")
     
+scheduler = BlockingScheduler()     
+scheduler.add_job(test, "interval", seconds = 2)
+scheduler.start()
+
         
 
 
