@@ -61,7 +61,18 @@ df = df.to_pandas(df)
 connection_string = "mysql+mysqlconnector://root:projects123123@localhost/currency_exchange_pipeline"
 engine = create_engine(connection_string)
 
-add_exchange_rate = df.to_sql('currency_exchange_rate', engine, if_exists = 'append', index = False) 
-  
-for index, row in df.iterrows():
-    print(*row)
+#add_exchange_rate = df.to_sql('currency_exchange_rate', engine, if_exists = 'append', index = False)
+
+def update_database(df):
+    for index, row in df.iterrows():
+        query =  "UPDATE currency_exchange_rate SET GBP = %s, CNY = %s, USD = %s, KRW = %s, JPY = %s, THB = %s, HKD = %s, CAD = %s, EUR =%s WHERE GBP = 1"
+        cursor.execute(query, (*row, ))
+     
+        
+     
+update_database(df)
+    
+        
+
+
+    
