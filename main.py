@@ -15,7 +15,6 @@ db = mysql.connector.connect(
 
 cursor = db.cursor()
 
-cursor.execute("CREATE DATABASE currency_exchange_pipeline")
 
 url = "https://v6.exchangerate-api.com/v6/cd86934b5b13777e2411cea1/latest/GBP"
 
@@ -50,5 +49,6 @@ df = df.select(
 
     )
 
-# Find correlation coefficients between GBP and all others
 
+df = df.to_pandas(df)
+df
