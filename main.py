@@ -3,6 +3,7 @@ import pandas as pd
 import polars as pl
 import json
 import mysql.connector
+from sqlalchemy import create_engine
 
 
 db = mysql.connector.connect(
@@ -35,6 +36,8 @@ df = pl.from_pandas(df)
 # Spain pts
 # France EUR
 
+# table currency_exchange_rate
+
 
 df = df.select(
     pl.col("GBP"),
@@ -47,8 +50,18 @@ df = df.select(
     pl.col("CAD"),
     pl.col("EUR")
 
-    )
+    )   
 
 
 df = df.to_pandas(df)
-df
+
+
+
+
+connection_string = "mysql+mysqlconnector://root:projects123123@localhost/currency_exchange_pipeline"
+engine = create_engine(connection_string)
+
+add_exchange_rate = df.to_sql('currency_exchange_rate', engine, if_exists = 'append', index = False) 
+  
+for index, row in df.iterrows():
+    print(*row)
