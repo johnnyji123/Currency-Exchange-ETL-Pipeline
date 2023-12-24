@@ -1,6 +1,6 @@
 ### Currency Exchange Rate Data Pipeline
 ### Overview
-* This project is a comprehensive data pipeline designed to retrieve, process, and store real-time currency exchange rate data. The pipeline includes steps for data extraction from the ExchangeRate-API, data preprocessing using Polars DataFrames, and the storage of the processed data in a MySQL database. The project also showcases an ETL (Extract, Transform, Load) mechanism, automated updates using APScheduler, and a failsafe mechanism with email notifications.
+* This project is a comprehensive data pipeline designed to retrieve, process, and store real-time currency exchange rate data against GBP. The pipeline includes steps for data extraction from the ExchangeRate-API, data preprocessing using Polars DataFrames, and the storage of the processed data in a MySQL database. The project also showcases an ETL (Extract, Transform, Load) mechanism, automated updates using APScheduler, and a failsafe mechanism with email notifications.
 ### Key Features
 ### 1) Data Extraction
 * Fetches real-time currency exchange rate data from the ExchangeRate-API using the provided API URL.
