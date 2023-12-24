@@ -11,8 +11,8 @@ import smtplib
 # Connecting to db
 db = mysql.connector.connect(
         host = "localhost",
-        user = "root",
-        password = "projects123123",
+        user = "user",
+        password = "password",
         database = "currency_exchange_pipeline"
     
     )
@@ -24,7 +24,7 @@ cursor = db.cursor()
 url = "https://v6.exchangerate-api.com/v6/cd86934b5b13777e2411cea1/latest/GBP"
 
 
-
+# Making API call
 def api_call(url):
     try: 
         response = requests.get(url)
@@ -60,7 +60,7 @@ df = api_call(url)
 
 # table currency_exchange_rate
 
-
+# Selecting the relevant currencies I want to monitor
 df = df.select(
     pl.col("GBP"),
     pl.col("CNY"),
@@ -75,16 +75,30 @@ df = df.select(
     )   
 
 
+df = df.with_columns(
+    pl.col("GBP").round(decimals = 2),
+    pl.col("CNY").round(decimals = 2),
+    pl.col("USD").round(decimals = 2),
+    pl.col("KRW").round(decimals = 2),
+    pl.col("JPY").round(decimals = 2),
+    pl.col("THB").round(decimals = 2),
+    pl.col("HKD").round(decimals = 2),
+    pl.col("CAD").round(decimals = 2),
+    pl.col("EUR").round(decimals = 2)
+    )
+
 df = df.to_pandas(df)
 
 
 
-
-connection_string = "mysql+mysqlconnector://root:projects123123@localhost/currency_exchange_pipeline"
+# Converting df to sql
+connection_string = "mysql+mysqlconnector://user:password@localhost/currency_exchange_pipeline"
 engine = create_engine(connection_string)
 
 #add_exchange_rate = df.to_sql('currency_exchange_rate', engine, if_exists = 'append', index = False)
 
+
+# Function to update database with current currency exchange rates
 def update_database():
     for index, row in df.iterrows():
         query =  "UPDATE currency_exchange_rate SET GBP = %s, CNY = %s, USD = %s, KRW = %s, JPY = %s, THB = %s, HKD = %s, CAD = %s, EUR =%s WHERE GBP = 1"
@@ -93,9 +107,10 @@ def update_database():
      
 
 
-#scheduler = BlockingScheduler()     
-#scheduler.add_job(update_database, "cron", hour = 17,  minute = 30)
-#scheduler.start()
+# Using APScheduler to automate updates - cron job
+scheduler = BlockingScheduler()     
+scheduler.add_job(update_database, "cron", hour = 17,  minute = 30)
+scheduler.start()
 
                 
 
